@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Review</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Submit Your Review</h1>
+            <p class="text-center"><a href="/widget/display.html">View Published Reviews</a></p>
+        </header>
+        
+        <main>
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product">Product</label>
+                    <input type="text" id="product" name="product" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rating">Rating</label>
+                    <div class="rating">
+                        <input type="radio" id="star5" name="rating" value="5" required>
+                        <label for="star5">★</label>
+                        <input type="radio" id="star4" name="rating" value="4">
+                        <label for="star4">★</label>
+                        <input type="radio" id="star3" name="rating" value="3">
+                        <label for="star3">★</label>
+                        <input type="radio" id="star2" name="rating" value="2">
+                        <label for="star2">★</label>
+                        <input type="radio" id="star1" name="rating" value="1">
+                        <label for="star1">★</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title">Review Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="review">Your Review</label>
+                    <textarea id="review" name="review" rows="5" required></textarea>
+                </div>
+                
+                <button type="submit" class="button">Submit Review</button>
+            </form>
+            
+            <div id="message" class="message"></div>
+        </main>
+    </div>
+    
+    <script>
+        document.getElementById('reviewForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const reviewData = {};
+            
+            formData.forEach((value, key) => {
+                reviewData[key] = value;
+            });
+            
+            reviewData.rating = parseInt(reviewData.rating);
+            
+            try {
+                const response = await fetch('/api/reviews', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('message').innerHTML = '<p class="success">Thank you for your review!</p>';
+                    document.getElementById('reviewForm').reset();
+                } else {
+                    document.getElementById('message').innerHTML = '<p class="error">Error submitting review. Please try again.</p>';
+                }
+            } catch (error) {
+                document.getElementById('message').innerHTML = '<p class="error">Error submitting review. Please try again.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

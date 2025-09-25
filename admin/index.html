@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Review Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Review Management</h1>
+        </header>
+        
+        <main>
+            <div class="controls">
+                <button id="refreshBtn" class="button">Refresh Reviews</button>
+            </div>
+            
+            <div id="reviewsContainer">
+                <!-- Reviews will be loaded here -->
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Load reviews when page loads
+        document.addEventListener('DOMContentLoaded', loadReviews);
+        
+        // Refresh button event
+        document.getElementById('refreshBtn').addEventListener('click', loadReviews);
+        
+        // Function to load all reviews
+        async function loadReviews() {
+            try {
+                const response = await fetch('/api/admin/reviews');
+                const reviews = await response.json();
+                
+                const container = document.getElementById('reviewsContainer');
+                
+                if (reviews.length === 0) {
+                    container.innerHTML = '<p class="no-reviews">No reviews found.</p>';
+                    return;
+                }
+                
+                container.innerHTML = reviews.map(review => `
+                    <div class="review-card ${review.approved ? 'approved' : 'pending'}">
+                        <div class="review-header">
+                            <h3>${review.title}</h3>
+                            <span class="status ${review.approved ? 'approved' : 'pending'}">
+                                ${review.approved ? 'Approved' : 'Pending'}
+                            </span>
+                        </div>
+                        <div class="review-body">
+                            <div class="review-rating">
+                                ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                            </div>
+                            <p class="review-text">${review.review}</p>
+                        </div>
+                        <div class="review-footer">
+                            <div class="review-author">
+                                <p><strong>${review.name}</strong></p>
+                                <p>${review.email}</p>
+                                <p>Product: ${review.product}</p>
+                            </div>
+                            <div class="review-actions">
+                                <button class="button approve-btn" data-id="${review._id}" data-approved="${review.approved}">
+                                    ${review.approved ? 'Unpublish' : 'Publish'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add event listeners to approve buttons
+                document.querySelectorAll('.approve-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.getAttribute('data-id');
+                        const approved = this.getAttribute('data-approved') === 'true';
+                        updateReviewStatus(id, !approved);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                document.getElementById('reviewsContainer').innerHTML = 
+                    '<p class="error">Error loading reviews. Please try again.</p>';
+            }
+        }
+        
+        // Function to update review status
+        async function updateReviewStatus(id, approved) {
+            try {
+                const response = await fetch(`/api/admin/reviews/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ approved })
+                });
+                
+                if (response.ok) {
+                    loadReviews(); // Refresh the reviews list
+                } else {
+                    alert('Error updating review status');
+                }
+            } catch (error) {
+                console.error('Error updating review:', error);
+                alert('Error updating review status');
+            }
+        }
+    </script>
+</body>
+</html>

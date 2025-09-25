@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify Widget Demo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .product h1 {
+            color: #2c3e50;
+        }
+        
+        .product-price {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .product-description {
+            margin: 1rem 0;
+            color: #666;
+        }
+        
+        .add-to-cart {
+            background-color: #27ae60;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #229954;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Shopify Store Demo</h1>
+    </header>
+    
+    <main>
+        <div class="product">
+            <h1>Premium Headphones</h1>
+            <p class="product-price">$199.99</p>
+            <p class="product-description">
+                Experience crystal clear sound with our premium headphones. 
+                Featuring noise cancellation technology and 30-hour battery life.
+            </p>
+            <form action="/cart/add" method="post">
+                <button type="submit" class="add-to-cart">Add to Cart</button>
+            </form>
+        </div>
+    </main>
+    
+    <!-- This is where the review widget will be inserted -->
+    <script>
+        // In a real Shopify store, this would be in your theme files
+        // For this demo, we're simulating the widget directly
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create the widget container
+            const widgetContainer = document.createElement('div');
+            widgetContainer.id = 'shopify-review-widget';
+            document.body.appendChild(widgetContainer);
+            
+            // Add some sample reviews
+            widgetContainer.innerHTML = `
+                <div style="margin: 2rem 0;">
+                    <h3 style="color: #333; margin-bottom: 1rem;">Customer Reviews</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 1rem; background: #fff;">
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #333;">Amazing sound quality!</h4>
+                                <div style="font-size: 1.2rem; color: #f39c12; margin-bottom: 0.5rem;">
+                                    ★★★★★
+                                </div>
+                            </div>
+                            <p style="margin: 0 0 1rem 0; color: #666;">These headphones exceeded my expectations. The sound quality is incredible and the battery lasts forever.</p>
+                            <div style="border-top: 1px solid #eee; padding-top: 0.5rem;">
+                                <p style="margin: 0; font-weight: bold; color: #333;">Alex Johnson</p>
+                            </div>
+                        </div>
+                        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 1rem; background: #fff;">
+                            <div style="margin-bottom: 1rem;">
+                                <h4 style="margin: 0 0 0.5rem 0; color: #333;">Great value for money</h4>
+                                <div style="font-size: 1.2rem; color: #f39c12; margin-bottom: 0.5rem;">
+                                    ★★★★☆
+                                </div>
+                            </div>
+                            <p style="margin: 0 0 1rem 0; color: #666;">Very comfortable to wear for long periods. Noise cancellation works well in most environments.</p>
+                            <div style="border-top: 1px solid #eee; padding-top: 0.5rem;">
+                                <p style="margin: 0; font-weight: bold; color: #333;">Sam Wilson</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a href="/widget" target="_blank" 
+                       style="display: inline-block; background: #3498db; color: white; padding: 0.5rem 1rem; 
+                              text-decoration: none; border-radius: 4px; font-weight: 500;">
+                        Write a Review
+                    </a>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
